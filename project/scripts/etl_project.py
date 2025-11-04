@@ -100,7 +100,11 @@ def postgresql_load(data_df, config):
     DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     engine = create_engine(DATABASE_URL)
 
-    data_df.to_sql(
+    colunas_relacionais = ['email','name_title', 'name_first', 'name_last', 'location_street_number', 'location_street_name','location_city', 'location_state', 'location_country', 'location_postcode']
+    data_relacionais = data_df[colunas_relacionais].copy()
+    data_relacionais.head(5)
+
+    data_relacionais.to_sql(
         name='users', 
         con=engine, 
         if_exists='append', 
