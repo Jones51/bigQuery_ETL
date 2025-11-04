@@ -10,16 +10,20 @@ O processo de aquisição e preparação de dados frequentemente se depara com a
 A implementação segue o ciclo de vida do pipeline de dados, abrangendo as seguintes etapas técnicas:
 
 Extração (E): Consumo programático de dados via API (RESTful) utilizando requisições HTTP (requests).
+
 Transformação (T): Processamento e data wrangling dos dados brutos em Python (utilizando Pandas), garantindo a qualidade, consistência e adequação ao esquema final (modelagem).
+
 Carregamento (L) em Data Warehouses Relacionais: Configuração de schema e carregamento dos dados tratados em PostgreSQL.
+
 Carregamento (L) em Bancos NoSQL: Configuração de coleções/documentos e carregamento em MongoDB, explorando suas estruturas flexíveis.
+
 Carregamento (L) em Plataformas Cloud-Scale: Ingestão de dados no Google BigQuery, aproveitando sua arquitetura de data warehousing na nuvem.
 
 ## 📊 Habilidades 
--Python: Jupyter notebook, Pandas, Transformação dos dados, ETL, APIs (request)
--Banco de dados: Google BigQuery, PostgreSQL, MongoDB
 -Linguagens & Ambientes	Python (incluindo scripting e ambientes como Jupyter Notebook/Lab)
+
 -Engenharia de Dados	ETL/ELT, Arquitetura de Pipeline, API Integration (requests), Data Wrangling e Transformação de Dados com Pandas
+
 -Bancos de Dados & Data Warehousing	Google BigQuery (SQL cloud-native), PostgreSQL (SQL Relacional), MongoDB (NoSQL / Orientado a Documentos)
 
 ## 🪄 Projeto Final 
