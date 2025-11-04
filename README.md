@@ -26,6 +26,14 @@ Carregamento (L) em Plataformas Cloud-Scale: Ingestão de dados no Google BigQue
 
 -Bancos de Dados & Data Warehousing	Google BigQuery (SQL cloud-native), PostgreSQL (SQL Relacional), MongoDB (NoSQL / Orientado a Documentos)
 
+## 🛫 Como Rodar o Projeto
+Para ter uma correta execução do projeto, é necessário garantir algumas configurações:
+- No seu ambiente Python, instale as bibliotecas necessárias, segundo o arquivo "requirements.txt"
+- Crie localmente seus bancos PostgreSQL e MongoDB.
+- Tenha em seu ambiente um arquivo .env com as suas respectivas chaves de segurança e conexões aos seus bancos, ou você pode trocar as strings de conexões direto no código (não recomendado por expor diretamente as suas informações de segurança).
+- Crie sua conta, dataset e tabela no seu ambiente do Google BigQuery.
+- Para acessar corretamente a sua conta do Google BigQuery, tenha configurado localmente na sua máquina o seu "GoogleCloudSDKInstaller", com suas configurações de conexão.
+
 ## 🪄 Projeto Final 
 <img width="1308" height="179" alt="image" src="https://github.com/user-attachments/assets/68bb4e06-7534-4264-b944-90d5ebd043f6" />
 
