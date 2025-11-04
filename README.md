@@ -39,7 +39,7 @@ Para ter uma correta execução do projeto, é necessário garantir algumas conf
 
 <img width="1428" height="903" alt="image" src="https://github.com/user-attachments/assets/f5a27e62-5535-4e8f-92f6-9caf105a925f" />
 
-<img width="1509" height="815" alt="image" src="https://github.com/user-attachments/assets/6673bdae-3eb5-4df7-a38f-fdf6dd5749c6" />
+<img width="1493" height="863" alt="image" src="https://github.com/user-attachments/assets/28f82611-53f2-4421-a7bc-342964ccbf3a" />
 
 <img width="1552" height="824" alt="image" src="https://github.com/user-attachments/assets/bce0116d-4c02-4c38-bd52-0dd07c0bf96d" />
 
