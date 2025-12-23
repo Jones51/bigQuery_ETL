@@ -146,148 +146,162 @@ class UserData(RobustAPI):
 # ==============================================================
 # Classes de Loaders nos Bancos
 # ==============================================================
-def load_config(env_path: Optional[str] = None) -> Dict[str, str]:
+class DataLoader:
     """
-    Load environment variables from a .env file and return them as a dictionary.
-
-    Args:
-        env_path (Optional[str]): Path to the .env file. If not provided, searches in the current or parent directory.
-
-    Returns:
-        Dict[str, str]: Dictionary containing database and API credentials.
+    Classe para carregar dados em diferentes bancos de dados.
     """
-    if env_path:
-        load_dotenv(env_path)
-    else:
-        # procura .env no diretório atual / parent
-        load_dotenv()
+    def __init__(self, env_path: Optional[str] = None):
+        self.config = self.load_config(env_path) 
+    
+    def load_config(self,env_path: Optional[str] = None) -> Dict[str, str]:
+        """
+        Load environment variables from a .env file and return them as a dictionary.
 
-    return {
-        "DB_USER": os.getenv("DB_USER"),
-        "DB_PASSWORD": os.getenv("DB_PASSWORD"),
-        "DB_HOST": os.getenv("DB_HOST"),
-        "DB_PORT": os.getenv("DB_PORT"),
-        "DB_NAME": os.getenv("DB_NAME"),
-        "MONGO_USER": os.getenv("MONGO_USER"),
-        "MONGO_PASSWORD": os.getenv("MONGO_PASSWORD"),
-        "MONGO_HOST": os.getenv("MONGO_HOST"),
-        "MONGO_NAME" : os.getenv("MONGO_NAME"),
-        "MONGO_PORT": os.getenv("MONGO_PORT"),
-        "MONGO_AUTH_SOURCE": os.getenv("MONGO_AUTH_SOURCE"),
-        "BIG_QUERY_DATASET" : os.getenv("BIG_QUERY_DATASET"),
-        "BIG_QUERY_TABLE_ID" : os.getenv("BIG_QUERY_TABLE_ID"),
-        "BIG_QUERY_PROJECT_ID" : os.getenv("BIG_QUERY_PROJECT_ID"),
-    }
+        Args:
+            env_path (Optional[str]): Path to the .env file. If not provided, searches in the current or parent directory.
 
-def postgresql_load(data_df, config):
-    """
-    Load the DataFrame into a PostgreSQL database.
+        Returns:
+            Dict[str, str]: Dictionary containing database and API credentials.
+        """
+        if env_path:
+            load_dotenv(env_path)
+        else:
+            # procura .env no diretório atual / parent
+            load_dotenv()
 
-    Args:
-        data_df (pd.DataFrame): DataFrame to be loaded.
-        config (dict): Database configuration.
-    """
-    DB_HOST = config["DB_HOST"]
-    DB_USER = config["DB_USER"]
-    DB_PASSWORD = config["DB_PASSWORD"]
-    DB_NAME = config["DB_NAME"]
-    DB_PORT = config["DB_PORT"]
+        return {
+            "DB_USER": os.getenv("DB_USER"),
+            "DB_PASSWORD": os.getenv("DB_PASSWORD"),
+            "DB_HOST": os.getenv("DB_HOST"),
+            "DB_PORT": os.getenv("DB_PORT"),
+            "DB_NAME": os.getenv("DB_NAME"),
+            "MONGO_USER": os.getenv("MONGO_USER"),
+            "MONGO_PASSWORD": os.getenv("MONGO_PASSWORD"),
+            "MONGO_HOST": os.getenv("MONGO_HOST"),
+            "MONGO_NAME" : os.getenv("MONGO_NAME"),
+            "MONGO_PORT": os.getenv("MONGO_PORT"),
+            "MONGO_AUTH_SOURCE": os.getenv("MONGO_AUTH_SOURCE"),
+            "BIG_QUERY_DATASET" : os.getenv("BIG_QUERY_DATASET"),
+            "BIG_QUERY_TABLE_ID" : os.getenv("BIG_QUERY_TABLE_ID"),
+            "BIG_QUERY_PROJECT_ID" : os.getenv("BIG_QUERY_PROJECT_ID"),
+        }
 
-    DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    engine = create_engine(DATABASE_URL)
+    def postgresql_load(self, data_df, config):
+        """
+        Load the DataFrame into a PostgreSQL database.
 
-    colunas_relacionais = ['email','name_title', 'name_first', 'name_last', 'location_street_number', 'location_street_name','location_city', 'location_state', 'location_country', 'location_postcode']
-    data_relacionais = data_df[colunas_relacionais].copy()
+        Args:
+            data_df (pd.DataFrame): DataFrame to be loaded.
+            config (dict): Database configuration.
+        """
+        DB_HOST = config["DB_HOST"]
+        DB_USER = config["DB_USER"]
+        DB_PASSWORD = config["DB_PASSWORD"]
+        DB_NAME = config["DB_NAME"]
+        DB_PORT = config["DB_PORT"]
 
-    data_relacionais.to_sql(
-        name='users', 
-        con=engine, 
-        if_exists='append', 
-        index=False,
-        chunksize=1000
-    )
+        DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+        engine = create_engine(DATABASE_URL)
 
-def mongodb_load(data_df, config):
-    """
-    Load the DataFrame into a MongoDB database.
+        colunas_relacionais = ['email','name_title', 'name_first', 'name_last', 'location_street_number', 'location_street_name','location_city', 'location_state', 'location_country', 'location_postcode']
+        data_relacionais = data_df[colunas_relacionais].copy()
 
-    Args:
-        data_df (pd.DataFrame): DataFrame to be loaded.
-        config (dict): Database configuration.
-    """
-    USERNAME = config["MONGO_USER"]
-    PASSWORD = config["MONGO_PASSWORD"]
-    HOST = config["MONGO_HOST"]
-    PORT = config["MONGO_PORT"]
-    DATABASE_NAME = config["MONGO_NAME"]
-    AUTH_SOURCE = config["MONGO_AUTH_SOURCE"]
+        data_relacionais.to_sql(
+            name='users', 
+            con=engine, 
+            if_exists='append', 
+            index=False,
+            chunksize=1000
+        )
 
-    connection_string = f"mongodb://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE_NAME}?authSource={AUTH_SOURCE}"
+    def mongodb_load(self, data_df, config):
+        """
+        Load the DataFrame into a MongoDB database.
 
-    client = MongoClient(connection_string)
-    db = client[DATABASE_NAME]
-    collection = db['users']
+        Args:
+            data_df (pd.DataFrame): DataFrame to be loaded.
+            config (dict): Database configuration.
+        """
+        USERNAME = config["MONGO_USER"]
+        PASSWORD = config["MONGO_PASSWORD"]
+        HOST = config["MONGO_HOST"]
+        PORT = config["MONGO_PORT"]
+        DATABASE_NAME = config["MONGO_NAME"]
+        AUTH_SOURCE = config["MONGO_AUTH_SOURCE"]
 
-    records = data_df.to_dict('records')
-    collection.insert_many(records)
+        connection_string = f"mongodb://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE_NAME}?authSource={AUTH_SOURCE}"
 
-def bigquery_load(data_df, config):
-    """
-    Load the DataFrame into a BigQuery table.
+        client = MongoClient(connection_string)
+        db = client[DATABASE_NAME]
+        collection = db['users']
 
-    Args:
-        data_df (pd.DataFrame): DataFrame to be loaded.
-        config (dict): Database configuration.
-    """
-    client = bigquery.Client()
+        records = data_df.to_dict('records')
+        collection.insert_many(records)
 
-    DATASET_ID = config["BIG_QUERY_DATASET"]
-    TABLE_ID = config["BIG_QUERY_TABLE_ID"]
-    PROJECT_ID = client.project
+    def bigquery_load(self, data_df, config):
+        """
+        Load the DataFrame into a BigQuery table.
 
-    table_id_completo = f"{PROJECT_ID}.{DATASET_ID}.{TABLE_ID}"
+        Args:
+            data_df (pd.DataFrame): DataFrame to be loaded.
+            config (dict): Database configuration.
+        """
+        client = bigquery.Client()
 
-    job_config = bigquery.LoadJobConfig(
-        write_disposition="WRITE_APPEND", 
-    )
+        DATASET_ID = config["BIG_QUERY_DATASET"]
+        TABLE_ID = config["BIG_QUERY_TABLE_ID"]
+        PROJECT_ID = client.project
 
-    job = client.load_table_from_dataframe(
-        data_df, 
-        table_id_completo, 
-        job_config=job_config
-    ) 
+        table_id_completo = f"{PROJECT_ID}.{DATASET_ID}.{TABLE_ID}"
 
-    job.result()  
+        job_config = bigquery.LoadJobConfig(
+            write_disposition="WRITE_APPEND", 
+        )
 
-    table = client.get_table(table_id_completo)
+        job = client.load_table_from_dataframe(
+            data_df, 
+            table_id_completo, 
+            job_config=job_config
+        ) 
+
+        job.result()  
+
+        table = client.get_table(table_id_completo)
 
 if __name__ == "__main__":
 
     #Inicializando 
     api_url = 'https://randomuser.me/api/'
     user_data_api = UserData(api_url)
+    data_loader = DataLoader()
     
-    if data := user_data_api.makeRequest(endpoint=''):
-        print("Dados obtidos com sucesso da API.")
-        
-        # Transformação dos dados
-        data_df = user_data_api.data_transform(data)
-        print("Dados transformados com sucesso.")
+    try:
+        # Extração dos dados
+        if data := user_data_api.makeRequest(endpoint=''):
+            print("Dados obtidos com sucesso da API.")
+            
+            # Transformação dos dados
+            data_df = user_data_api.data_transform(data)
+            print("Dados transformados com sucesso.")
 
-        # Carregando as configurações do .env
-        config = load_config()
+            # Carregando as configurações do .env
+            config = data_loader.config
 
-        # Carregando dados no PostgreSQL
-        postgresql_load(data_df, config)
-        print("Dados carregados com sucesso no PostgreSQL.")
+            # Carregando dados no PostgreSQL
+            data_loader.postgresql_load(data_df, config)
+            print("Dados carregados com sucesso no PostgreSQL.")
 
-        # Carregando dados no MongoDB
-        mongodb_load(data_df, config)
-        print("Dados carregados com sucesso no MongoDB.")
+            # Carregando dados no MongoDB
+            data_loader.mongodb_load(data_df, config)
+            print("Dados carregados com sucesso no MongoDB.")
 
-        # Carregando dados no BigQuery
-        bigquery_load(data_df, config)
-        print("Dados carregados com sucesso no BigQuery.")
+            # Carregando dados no BigQuery
+            data_loader.bigquery_load(data_df, config)
+            print("Dados carregados com sucesso no BigQuery.")
 
-    else:
-        print("Sem dados da API.")
+            MemoryManager.clean_memory(max_percent=90)
+        else:
+            print("Sem dados da API.")
+    except Exception as e:
+        print(f"Ocorreu um erro: {e}")
+        MemoryManager.clean_memory(max_percent=90)
